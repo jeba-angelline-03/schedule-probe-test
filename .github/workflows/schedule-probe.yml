@@ -1,0 +1,22 @@
+name: schedule-probe
+
+# A throwaway test: does GitHub start a scheduled workflow in this repository?
+# It prints the event and the time (UTC) and nothing else. Delete the repository when the test is finished.
+
+on:
+  schedule:
+    - cron: "4,9,14,19,24,29,34,39,44,49,54,59 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Print the event and the time
+        env:
+          EVENT: ${{ github.event_name }}
+          CRON: ${{ github.event.schedule }}
+        run: echo "event=$EVENT cron=\"$CRON\" utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
